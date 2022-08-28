@@ -31,4 +31,10 @@
 
 * Opencv for image processing, zmq for networking.
 
+## Results
 
+Direct:
+![direct1](images/direct1.png)
+
+Localhost:
+![localhost](images/localhost.png)

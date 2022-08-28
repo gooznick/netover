@@ -5,29 +5,36 @@ import time
 import os
 import config
 import matplotlib.pyplot as plt
+import zmq
+import pickle
 
 
-
-def send_to_client(image, rotations):
-    (h, w) = image.shape[:2]
-    (cX, cY) = (w // 2, h // 2)
-    M = cv2.getRotationMatrix2D((cX, cY), 10, 1.0)
-    for i in range(rotations):
-        image = cv2.warpAffine(image, M, (w, h))
+def send_to_client(socket, image, rotations):
+    print("Sending")
+    p = pickle.dumps((image, rotations))
+    socket.send(p)
     return
 
-def wait_for_client():
+def wait_for_client(socket):
+    print("waiting")
+    message = socket.recv()
     pass 
 
 def server(pixels, rotations):
     image = np.random.randint(0,255,[pixels, pixels], dtype=np.uint8)
-
+    context = zmq.Context()
+    print ("Connecting to worker...")
+    socket = context.socket(zmq.REQ)
+    socket.connect(config.connect)
+    print("connected")
     cycles = 0
     passed = 0.0
     while True:
         start = time.time()
-        send_to_client(image, rotations)
-        response = wait_for_client()
+
+        send_to_client(socket, image, rotations)
+        response = wait_for_client(socket)
+
         cycles = cycles+1
         passed = passed + (time.time() - start)
         if passed > 1:
@@ -41,11 +48,16 @@ def server(pixels, rotations):
 if __name__ == "__main__":
 
     # single core
-    affinity_mask = {0}
+    affinity_mask = {1}
     pid = 0
     os.sched_setaffinity(0, affinity_mask)
 
   
+    # from threading import Thread
+    # import client
+    # thread = Thread(target = client.main)
+    # thread.start()
+    # #thread.join()
 
     rotations_op =  [5, 10,15,20,25,30]
     options = {"0"}
