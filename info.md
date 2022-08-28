@@ -33,8 +33,21 @@
 
 ## Results
 
+* Intel, single threaded, single core affinity : no difference between direct and tcp communication. 80 operations @ 30 fps.
+* Rpi3, same characteristics : 8 / 7 operations, respectively.
+  
+### Raspberry pi 
+
 Direct:
-![direct1](images/direct1.png)
+![rpi_direct](images/rpi_direct.png)
 
 Localhost:
-![localhost](images/localhost.png)
+![localhost](images/rpi_socket.png)
+
+### Intel i7 
+
+Direct:
+![intel_direct](images/intel_direct.png)
+
+Localhost:
+![socket](images/intel_socket.png)

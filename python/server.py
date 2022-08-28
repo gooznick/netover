@@ -12,6 +12,7 @@ import pickle
 import client
 
 direct = False
+rpi = False 
 
 matplotlib.use('TkAgg')
 
@@ -62,7 +63,7 @@ if __name__ == "__main__":
     os.sched_setaffinity(0, affinity_mask)
 
   
-    rotations_op =  range(2,15,2)
+    rotations_op =  range(2,15,2) if rpi else range(20,150,20)
     options = {"0"}
     results = {}
     for affinity in options:
@@ -78,6 +79,7 @@ if __name__ == "__main__":
     plt.ylabel('fps')
     plt.grid(True)
     plt.legend()
-    plt.title(f"{config.pixels} x {config.pixels}, {'direct' if direct else config.bind},  Raspberry Pi 3B 1.2")
+    cpu = "Raspberry Pi 3B 1.2" if rpi else "Intel i7"
+    plt.title(f"{config.pixels} x {config.pixels}, {'direct' if direct else config.bind},  {cpu}")
     plt.show()
     
