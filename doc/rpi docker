@@ -1,0 +1,14 @@
+curl -sSL https://get.docker.com | sh
+sudo usermod -aG docker ${USER}
+sudo reboot
+docker pull balenalib/rpi-raspbian
+
+In the docker :
+
+apt update
+apt install python python3-pip
+pip install zmq opencv-python-headless
+apt install python3-opencv
+# apt-get install libcblas-dev libatlas-base-dev libjpeg-dev  libwebp-dev libpng16-16 libtiff5
+python3 client.py 
+

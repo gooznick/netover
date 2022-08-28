@@ -34,6 +34,7 @@
 ## Results
 
 * Intel, single threaded, single core affinity : no difference between direct and tcp communication. 80 operations @ 30 fps.
+* Same results within docker container.
 * Rpi3, same characteristics : 8 / 7 operations, respectively.
   
 ### Raspberry pi 
@@ -51,3 +52,20 @@ Direct:
 
 Localhost:
 ![socket](images/intel_socket.png)
+
+## Running docker on rpi 
+
+* Raw results of range(2,15,2) operations :
+  
+  * rpi docker direct
+```
+.{'0': [72.66088845930318, 38.369303404352735, 25.89687689829936, 19.590840801391344, 15.65623724161872, 13.104467952440272, 11.25902767509474]}
+```
+
+  * rpi direct
+```
+.{'0': [106.65942153154089, 56.825822645204845, 38.523460572164964, 29.040949571606646, 23.348802665007145, 19.524859689789505, 16.73763641271816]}
+```
+
+  * docker is slower by 150%. Maybe different accelerations of numpy ? 
+

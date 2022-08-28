@@ -12,7 +12,7 @@ import pickle
 import client
 
 direct = False
-rpi = False 
+rpi = True 
 
 matplotlib.use('TkAgg')
 
