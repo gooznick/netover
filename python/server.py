@@ -4,20 +4,29 @@ import cv2
 import time
 import os
 import config
+import matplotlib
 import matplotlib.pyplot as plt
 import zmq
 import pickle
 
+import client
+
+direct = False
+
+matplotlib.use('TkAgg')
 
 def send_to_client(socket, image, rotations):
     print("Sending")
-    p = pickle.dumps((image, rotations))
-    socket.send(p)
-    return
+    if not direct:
+        p = pickle.dumps((image, rotations))
+        socket.send(p)
+    else:
+        client.work(image,rotations)
 
 def wait_for_client(socket):
     print("waiting")
-    message = socket.recv()
+    if not direct:
+        message = socket.recv()
     pass 
 
 def server(pixels, rotations):
@@ -53,19 +62,13 @@ if __name__ == "__main__":
     os.sched_setaffinity(0, affinity_mask)
 
   
-    # from threading import Thread
-    # import client
-    # thread = Thread(target = client.main)
-    # thread.start()
-    # #thread.join()
-
-    rotations_op =  [5, 10,15,20,25,30]
+    rotations_op =  range(2,15,2)
     options = {"0"}
     results = {}
     for affinity in options:
         fps = []
         for rotations in rotations_op:
-            fps.append(server(500, rotations))
+            fps.append(server(config.pixels, rotations))
         results[str(affinity)] = fps
 
     for caption, fps in results.items():
@@ -75,6 +78,6 @@ if __name__ == "__main__":
     plt.ylabel('fps')
     plt.grid(True)
     plt.legend()
-    plt.title("500 x 500, 11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz")
+    plt.title(f"{config.pixels} x {config.pixels}, {'direct' if direct else config.bind},  Raspberry Pi 3B 1.2")
     plt.show()
     
